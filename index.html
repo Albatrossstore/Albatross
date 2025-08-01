@@ -30,11 +30,11 @@
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Electronics</a></li>
                     <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Home and Garden</a></li>
-                    <li><a href="#">Health and Beauty</a></li>
+                    <li><a href="#">Home & Garden</a></li>
+                    <li><a href="#">Health & Beauty</a></li>
                     <li><a href="#">Games</a></li>
                     <li><a href="#">Pet Supplies</a></li>
-                    <li><a href="#">blog</a></li>
+                    <li><a href="#">Blog</a></li>
                 </ul>
             </nav>
         </div>
@@ -53,18 +53,25 @@
         </div>
     </main>
 
-    <!-- MODIFIED: Content removed, only title and divider remain -->
     <section class="featured-categories">
         <h2 class="section-title">Featured Categories</h2>
         <hr class="section-divider">
+        <!-- This container will be filled by JavaScript -->
+        <div id="categories-container" class="category-grid-wrapper">
+            <p>Loading Categories...</p>
+        </div>
     </section>
 
-    <!-- MODIFIED: Content removed, only title and divider remain -->
     <section class="featured-products">
-        <h2 class="section-title">Featured products</h2>
+        <h2 class="section-title">Featured Products</h2>
         <hr class="section-divider">
+        <!-- This container will be filled by JavaScript -->
+        <div id="products-container" class="product-grid">
+            <p>Loading Products...</p>
+        </div>
     </section>
 
-    <script src="script.js"></script>
+    <!-- This script tag MUST be here, at the end of the body -->
+    <script src="sheets-data.js"></script>
 </body>
 </html>
