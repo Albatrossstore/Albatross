@@ -20,56 +20,37 @@ body {
 
 /* --- KEYFRAMES FOR ALL ANIMATIONS --- */
 
-/* Used for the flame effect on nav links */
 @keyframes animated-flame {
   0%{ background-position: 0% 50% }
   50%{ background-position: 100% 50% }
   100%{ background-position: 0% 50% }
 }
 
-/* Entrance Animation for the logo */
 @keyframes logoIntro {
-    0% {
-        transform: scale(0.7) rotate(-10deg);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
+    0% { transform: scale(0.7) rotate(-10deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-/* Entrance Animation for the divider line */
 @keyframes drawIn {
     to { transform: scaleY(1); }
 }
 
-/* Hover Animation for the logo */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
-/* Animation for letters falling from the top */
 @keyframes fall-from-top {
-    0% {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
-/* Animation for the writing effect */
 @keyframes writing {
     from { width: 0; }
     to { width: 100%; }
 }
 
-/* Animation for the blinking cursor */
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: #e0e4e8; }
@@ -171,7 +152,6 @@ body {
 .hero-logo {
     height: 270px;
     transition: transform 0.4s ease-in-out;
-    /* Entrance Animation */
     opacity: 0;
     animation: logoIntro 1s ease-out 0.2s forwards;
 }
@@ -185,7 +165,6 @@ body {
 .hero-divider {
     width: 2px; height: 200px; background-color: rgba(255, 255, 255, 0.8);
     transform: scaleY(0); transform-origin: top;
-    /* Entrance Animation */
     animation: drawIn 0.6s ease-out 0.8s forwards;
 }
 
@@ -218,21 +197,18 @@ body {
     font-size: 2.5rem;
     color: #e0e4e8;
     margin-top: 5px;
-
-    /* Styles for the writing animation */
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    border-right: 3px solid transparent; /* The cursor starts as transparent */
-    
+    border-right: 3px solid transparent;
     animation:
         writing 1.75s steps(47, end) 2s both,
-        blink-caret .75s step-end 3 2s forwards; /* Cursor blinks 3 times and disappears */
+        blink-caret .75s step-end 3 2s forwards;
 }
 
-
-/* --- Featured Categories Section --- */
-.featured-categories {
+/* --- Section Styles --- */
+.featured-categories,
+.featured-products {
     width: 85%;
     max-width: 1300px;
     margin: 40px auto 80px auto;
@@ -257,11 +233,129 @@ body {
     margin-bottom: 50px;
 }
 
-/* --- Featured Products Section --- */
-.featured-products {
-    width: 85%;
-    max-width: 1300px;
-    margin: 40px auto 80px auto;
-    padding: 40px;
+/* --- Featured Categories Grid --- */
+.category-grid-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.category-column {
     text-align: center;
+}
+
+.category-image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #3a4a60;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.category-image-placeholder:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.category-image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.category-image-placeholder:hover img {
+    transform: scale(1.1);
+}
+
+.category-button {
+    width: 100%;
+    background-color: #f0f0f0;
+    color: #1f2c47;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Featured Products Grid --- */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px 20px;
+}
+
+.product-item {
+    flex-basis: calc(33.333% - 20px);
+    text-align: center;
+}
+
+.product-image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #3a4a60;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.product-image-placeholder:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.product-image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.product-image-placeholder:hover img {
+    transform: scale(1.1);
+}
+
+.get-it-button {
+    width: 100%;
+    background-color: #f0f0f0;
+    color: #1f2c47;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.get-it-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product-divider {
+    width: 100%;
+    flex-basis: 100%;
+    height: 0;
+    border: 0;
+    border-top: 1px solid #3a4a60;
+    margin: 0;
 }
