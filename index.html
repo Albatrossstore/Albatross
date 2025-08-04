@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Albatross - Elevate Your Shopping Experience</title>
+    <link rel="icon" type="image/png" href="images/Lolo.png/Lolo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Courgette&family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Added Lato font for the footer, though it might be included in other imports, this ensures it's available -->
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Courgette&family=Lato:wght@400;700&family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -56,22 +59,48 @@
     <section class="featured-categories">
         <h2 class="section-title">Featured Categories</h2>
         <hr class="section-divider">
-        <!-- This container will be filled by JavaScript -->
         <div id="categories-container" class="category-grid-wrapper">
-            <p>Loading Categories...</p>
+            <!-- MODIFIED: New loader structure -->
+            <div class="loader-container">
+                <span class="loader"></span>
+            </div>
         </div>
     </section>
 
     <section class="featured-products">
         <h2 class="section-title">Featured Products</h2>
         <hr class="section-divider">
-        <!-- This container will be filled by JavaScript -->
         <div id="products-container" class="product-grid">
-            <p>Loading Products...</p>
+            <!-- MODIFIED: New loader structure -->
+            <div class="loader-container">
+                <span class="loader"></span>
+            </div>
         </div>
     </section>
 
-    <!-- This script tag MUST be here, at the end of the body -->
     <script src="sheets-data.js"></script>
+
+    <!-- START: NEW FOOTER SECTION -->
+    <footer class="site-footer-container">
+        <div class="footer-content">
+            <p class="footer-notice">Heads up! You're now being redirected to the purchase site. Remember, we're just the middleman—happy shopping!</p>
+            <p class="footer-follow">please follow us</p>
+        </div>
+        <hr class="footer-divider">
+        <div class="social-icons">
+            <a href="#" aria-label="Instagram"><img src="images/icons/instagram.png" alt="Instagram"></a>
+            <a href="#" aria-label="TikTok"><img src="images/icons/tiktok.png" alt="TikTok"></a>
+            <a href="#" aria-label="YouTube"><img src="images/icons/youtube.png" alt="YouTube"></a>
+            <a href="#" aria-label="Facebook"><img src="images/icons/facebook.png" alt="Facebook"></a>
+            <a href="#" aria-label="X"><img src="images/icons/x.png" alt="X"></a>
+            <a href="#" aria-label="Snapchat"><img src="images/icons/snapchat.png" alt="Snapchat"></a>
+            <a href="#" aria-label="Pinterest"><img src="images/icons/pinterest.png" alt="Pinterest"></a>
+            <a href="#" aria-label="Reddit"><img src="images/icons/reddit.png" alt="Reddit"></a>
+            <a href="#" aria-label="Telegram"><img src="images/icons/telegram.png" alt="Telegram"></a>
+            <a href="#" aria-label="WhatsApp"><img src="images/icons/whatsapp.png" alt="WhatsApp"></a>
+        </div>
+    </footer>
+    <!-- END: NEW FOOTER SECTION -->
+
 </body>
 </html>
