@@ -20,6 +20,13 @@ body {
 
 /* --- KEYFRAMES FOR ALL ANIMATIONS --- */
 
+@keyframes elastic-pop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.4); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 @keyframes animated-flame {
   0%{ background-position: 0% 50% }
   50%{ background-position: 100% 50% }
@@ -54,6 +61,82 @@ body {
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: #e0e4e8; }
+}
+
+@keyframes bounce {
+  0% , 100%{ font-size: 0.75px }
+  50% { font-size: 1.5px }
+}
+@keyframes blast {
+  0% , 40% {
+    font-size: 0.5px;
+  }
+  70% {
+    opacity: 1;
+    font-size: 4px;
+  }
+   100% {
+     font-size: 6px;
+    opacity: 0;
+  }
+}
+
+/* NEW: Keyframe for product title animation */
+@keyframes fadeIn-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* --- Loader Styles --- */
+.loader-container {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    width: 100%;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+.loader::before , .loader::after{
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50% , -50%);
+  width: 48em;
+  height: 48em;
+  background-image:
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0),
+    radial-gradient(circle 10px, #FFF 100%, transparent 0);
+  background-position: 0em -18em, 0em 18em, 18em 0em, -18em 0em,
+                       13em -13em, -13em -13em, 13em 13em, -13em 13em;
+    background-repeat: no-repeat;
+  font-size: 0.5px;
+  border-radius: 50%;
+  animation: blast 0.7s ease-in infinite;
+}
+.loader::after {
+  font-size: 1px;
+  background: #fff;
+  animation: bounce 0.7s ease-in infinite;
 }
 
 
@@ -244,20 +327,28 @@ body {
     text-align: center;
 }
 
+/* NEW: Styles for the new category link */
+.category-link {
+    text-decoration: none;
+    display: block;
+    color: inherit;
+}
+
 .category-image-placeholder {
     width: 100%;
     aspect-ratio: 1 / 1;
     background-color: #3a4a60;
     border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     margin-bottom: 20px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .category-image-placeholder:hover {
     transform: scale(1.05);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .category-image-placeholder img {
@@ -302,6 +393,85 @@ body {
 .product-item {
     flex-basis: calc(33.333% - 20px);
     text-align: center;
+    /* NEW: Flex column to arrange image, info, and button */
+    display: flex;
+    flex-direction: column;
+}
+
+/* NEW: Styles for the new product links and info */
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Added a specific class for the link around the image to hold the badge */
+.product-image-link {
+    position: relative; /* Required for absolute positioning of the badge */
+    display: block;
+}
+
+/* NEW: Product Badge Styles */
+.product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f35245; /* A fiery red color */
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Roboto', sans-serif; /* Consistent font for badges */
+    z-index: 5; /* Ensures the badge is on top of the image */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #ffffff;
+    transform: rotate(10deg);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Add a hover effect to the badge when hovering over the image link */
+.product-image-link:hover .product-badge {
+    transform: rotate(0deg) scale(1.1);
+    background-color: #ffc94b; /* Change color on hover */
+    color: #1f2c47;
+}
+
+
+.get-it-button-link {
+    text-decoration: none;
+    display: block;
+    margin-top: auto; /* Pushes the button to the bottom */
+}
+
+.product-info {
+    padding: 15px 5px;
+    text-align: center;
+}
+
+/* MODIFIED: Applied new font and size for product titles */
+.product-title {
+    font-family: 'Oswald', sans-serif; /* NEW: Stylish and bold font */
+    font-size: 1.4rem;                /* NEW: A bit larger */
+    font-weight: 500;
+    color: #e0e4e8;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+
+    /* NEW: Animation Properties */
+    animation: fadeIn-from-bottom 0.5s ease-out forwards;
+    opacity: 0; /* Start as invisible for the animation */
+    animation-delay: 0.2s; /* Optional: adds a slight delay */
+}
+
+/* MODIFIED & UPDATED: Applied new font and size for product descriptions */
+.product-description {
+    font-family: 'Lato', sans-serif; /* NEW: Clean and beautiful font */
+    font-size: 0.9rem;               /* NEW: Slightly smaller and cleaner */
+    color: #a0a8b4;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    text-align: left; /* UPDATED: Aligns text to the left */
 }
 
 .product-image-placeholder {
@@ -309,15 +479,16 @@ body {
     aspect-ratio: 1 / 1;
     background-color: #3a4a60;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Adjusted margin */
     cursor: pointer;
     overflow: hidden;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .product-image-placeholder:hover {
     transform: scale(1.05);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
 .product-image-placeholder img {
@@ -330,6 +501,7 @@ body {
 .product-image-placeholder:hover img {
     transform: scale(1.1);
 }
+
 
 .get-it-button {
     width: 100%;
@@ -358,4 +530,162 @@ body {
     border: 0;
     border-top: 1px solid #3a4a60;
     margin: 0;
+}
+
+/* --- Animated Section Title --- */
+.section-title {
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.section-title span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(25px) rotateZ(15deg);
+    transition: opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1),
+                transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.section-title.in-view span {
+    opacity: 1;
+    transform: translateY(0) rotateZ(0);
+}
+
+/* --- Animated Category Columns --- */
+.category-column {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.category-column.in-view {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- Animated Product Items --- */
+.product-item {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.product-item.in-view {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- Header Animations --- */
+.header-logo,
+.search-container,
+.main-nav li,
+.search-button svg {
+    opacity: 0;
+}
+
+.header-logo {
+    transform: translateX(-50px);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.search-container {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.search-button svg {
+    transform: scale(0);
+}
+
+.main-nav li {
+    transform: translateX(-30px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.site-header.header-in-view .header-logo,
+.site-header.header-in-view .search-container,
+.site-header.header-in-view .main-nav li {
+    opacity: 1;
+    transform: none;
+}
+
+.site-header.header-in-view .search-button svg {
+    opacity: 1;
+    animation: elastic-pop 0.5s ease-out forwards;
+}
+
+.site-header.header-in-view .main-nav li:nth-child(1) { transition-delay: 0.25s; }
+.site-header.header-in-view .main-nav li:nth-child(2) { transition-delay: 0.3s; }
+.site-header.header-in-view .main-nav li:nth-child(3) { transition-delay: 0.35s; }
+.site-header.header-in-view .main-nav li:nth-child(4) { transition-delay: 0.4s; }
+.site-header.header-in-view .main-nav li:nth-child(5) { transition-delay: 0.45s; }
+.site-header.header-in-view .main-nav li:nth-child(6) { transition-delay: 0.5s; }
+.site-header.header-in-view .main-nav li:nth-child(7) { transition-delay: 0.55s; }
+.site-header.header-in-view .main-nav li:nth-child(8) { transition-delay: 0.6s; }
+
+.site-header.header-in-view .search-container { transition-delay: 0.1s; }
+.site-header.header-in-view .search-button svg { animation-delay: 0.4s; }
+
+/* --- Footer Styles (Corrected and Organized) --- */
+.site-footer-container {
+    width: 85%;
+    max-width: 1300px;
+    margin: 80px auto 60px auto;
+    padding: 0 20px; /* Added padding for smaller screens */
+    text-align: center;
+}
+
+.footer-content {
+    margin-bottom: 30px;
+}
+
+.footer-notice {
+    font-family: 'Allura', cursive;
+    font-size: 2.2rem;
+    color: #e0e4e8;
+    line-height: 1.5;
+    margin: 0 0 15px 0; /* Added margin-bottom */
+}
+
+.footer-follow {
+    font-family: 'Allura', cursive;
+    font-size: 1.5rem;
+    color: #e0e4e8;
+    margin: 0;
+}
+
+.footer-divider {
+    border: none; /* Reset border */
+    height: 1px;
+    background: repeating-linear-gradient(to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.2) 10px, 
+        rgba(255, 255, 255, 0.2) 20px, 
+        transparent 30px);
+    background-size: 40px 1px;
+    margin: 40px auto;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 35px; /* Spacing between icons */
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+}
+
+.social-icons img {
+    height: 28px;
+    width: auto;
 }
