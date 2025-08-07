@@ -33,9 +33,15 @@ body {
   100%{ background-position: 0% 50% }
 }
 
-@keyframes logoIntro {
-    0% { transform: scale(0.7) rotate(-10deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+@keyframes logo-reveal {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 @keyframes drawIn {
@@ -81,11 +87,21 @@ body {
   }
 }
 
-/* NEW: Keyframe for product title animation */
 @keyframes fadeIn-from-bottom {
   from {
     opacity: 0;
     transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -163,8 +179,14 @@ body {
 .header-logo { height: 35px; transition: transform 0.3s ease; }
 .header-logo:hover { transform: scale(1.1) rotate(-5deg); }
 
-.search-container {
+
+/* --- Search Bar and Suggestions --- */
+.search-wrapper {
     flex-grow: 1;
+    position: relative;
+}
+
+.search-container {
     display: flex;
     background-color: transparent;
     border: 2px solid rgba(224, 228, 232, 0.6);
@@ -176,6 +198,8 @@ body {
 .search-container:focus-within {
     border-color: #f35245;
     box-shadow: 0 0 10px rgba(243, 82, 69, 0.5);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .product-search-input {
@@ -193,6 +217,85 @@ body {
 .search-button:hover {
     color: #f35245;
 }
+
+#suggestions-wrapper {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #2c3a58;
+    border: 2px solid #f35245;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #3a4a60;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+}
+
+.suggestion-item:hover {
+    background-color: #3a4a60;
+}
+
+.suggestion-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.suggestion-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    overflow: hidden;
+}
+
+.suggestion-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #e0e4e8;
+    white-space: nowrap;
+}
+
+.suggestion-badge {
+    background-color: #f35245;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.suggestion-description {
+    font-size: 0.8rem;
+    color: #a0a8b4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 4px;
+}
+
 
 .main-nav ul { list-style: none; display: flex; }
 .main-nav li { margin-left: 25px; }
@@ -232,17 +335,17 @@ body {
     gap: 40px;
 }
 
+/* THE FIX: Added transition for the hover effect */
 .hero-logo {
     height: 270px;
-    transition: transform 0.4s ease-in-out;
     opacity: 0;
-    animation: logoIntro 1s ease-out 0.2s forwards;
+    animation: logo-reveal 1s ease-out 0.2s forwards;
+    transition: transform 0.3s ease-in-out; /* This makes the hover smooth */
 }
+
+/* THE FIX: Replaced animation with a simple, non-conflicting transform */
 .hero-logo:hover {
-    animation-name: pulse, logoIntro;
-    animation-duration: 2s, 1s;
-    animation-iteration-count: infinite, 1;
-    animation-fill-mode: both, forwards;
+    transform: scale(1.05); /* Gently scales the logo up on hover */
 }
 
 .hero-divider {
@@ -307,7 +410,7 @@ body {
     letter-spacing: 1px;
     margin-bottom: 20px;
     color: #e0e4e8;
-    text-transform: capitalize;
+    text-transform: uppercase;
 }
 
 .section-divider {
@@ -327,7 +430,6 @@ body {
     text-align: center;
 }
 
-/* NEW: Styles for the new category link */
 .category-link {
     text-decoration: none;
     display: block;
@@ -393,47 +495,42 @@ body {
 .product-item {
     flex-basis: calc(33.333% - 20px);
     text-align: center;
-    /* NEW: Flex column to arrange image, info, and button */
     display: flex;
     flex-direction: column;
 }
 
-/* NEW: Styles for the new product links and info */
 .product-link {
     text-decoration: none;
     color: inherit;
     display: block;
 }
 
-/* Added a specific class for the link around the image to hold the badge */
 .product-image-link {
-    position: relative; /* Required for absolute positioning of the badge */
+    position: relative;
     display: block;
 }
 
-/* NEW: Product Badge Styles */
 .product-badge {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #f35245; /* A fiery red color */
+    background-color: #f35245;
     color: #ffffff;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: 'Roboto', sans-serif; /* Consistent font for badges */
-    z-index: 5; /* Ensures the badge is on top of the image */
+    font-family: 'Roboto', sans-serif;
+    z-index: 5;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border: 2px solid #ffffff;
     transform: rotate(10deg);
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Add a hover effect to the badge when hovering over the image link */
 .product-image-link:hover .product-badge {
     transform: rotate(0deg) scale(1.1);
-    background-color: #ffc94b; /* Change color on hover */
+    background-color: #ffc94b;
     color: #1f2c47;
 }
 
@@ -441,7 +538,7 @@ body {
 .get-it-button-link {
     text-decoration: none;
     display: block;
-    margin-top: auto; /* Pushes the button to the bottom */
+    margin-top: auto;
 }
 
 .product-info {
@@ -449,29 +546,25 @@ body {
     text-align: center;
 }
 
-/* MODIFIED: Applied new font and size for product titles */
 .product-title {
-    font-family: 'Oswald', sans-serif; /* NEW: Stylish and bold font */
-    font-size: 1.4rem;                /* NEW: A bit larger */
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
     font-weight: 500;
     color: #e0e4e8;
     margin-bottom: 8px;
     letter-spacing: 0.5px;
-
-    /* NEW: Animation Properties */
     animation: fadeIn-from-bottom 0.5s ease-out forwards;
-    opacity: 0; /* Start as invisible for the animation */
-    animation-delay: 0.2s; /* Optional: adds a slight delay */
+    opacity: 0;
+    animation-delay: 0.2s;
 }
 
-/* MODIFIED & UPDATED: Applied new font and size for product descriptions */
 .product-description {
-    font-family: 'Lato', sans-serif; /* NEW: Clean and beautiful font */
-    font-size: 0.9rem;               /* NEW: Slightly smaller and cleaner */
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
     color: #a0a8b4;
     line-height: 1.5;
     margin-bottom: 15px;
-    text-align: left; /* UPDATED: Aligns text to the left */
+    text-align: left;
 }
 
 .product-image-placeholder {
@@ -479,7 +572,7 @@ body {
     aspect-ratio: 1 / 1;
     background-color: #3a4a60;
     border-radius: 8px;
-    margin-bottom: 0; /* Adjusted margin */
+    margin-bottom: 0;
     cursor: pointer;
     overflow: hidden;
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -589,8 +682,6 @@ body {
 }
 
 .search-container {
-    transform: scaleX(0);
-    transform-origin: left;
     transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -627,12 +718,17 @@ body {
 .site-header.header-in-view .search-container { transition-delay: 0.1s; }
 .site-header.header-in-view .search-button svg { animation-delay: 0.4s; }
 
-/* --- Footer Styles (Corrected and Organized) --- */
+
+/* 
+==============================================
+FOOTER STYLES (WITH ANIMATIONS)
+============================================== 
+*/
 .site-footer-container {
     width: 85%;
     max-width: 1300px;
     margin: 80px auto 60px auto;
-    padding: 0 20px; /* Added padding for smaller screens */
+    padding: 0 20px;
     text-align: center;
 }
 
@@ -640,23 +736,26 @@ body {
     margin-bottom: 30px;
 }
 
-.footer-notice {
+.footer-notice,
+.footer-follow {
     font-family: 'Allura', cursive;
-    font-size: 2.2rem;
     color: #e0e4e8;
+    margin: 0;
+    opacity: 0; 
+}
+
+.footer-notice {
+    font-size: 2.2rem;
     line-height: 1.5;
-    margin: 0 0 15px 0; /* Added margin-bottom */
+    margin-bottom: 15px;
 }
 
 .footer-follow {
-    font-family: 'Allura', cursive;
     font-size: 1.5rem;
-    color: #e0e4e8;
-    margin: 0;
 }
 
 .footer-divider {
-    border: none; /* Reset border */
+    border: none;
     height: 1px;
     background: repeating-linear-gradient(to right, 
         transparent, 
@@ -665,6 +764,7 @@ body {
         transparent 30px);
     background-size: 40px 1px;
     margin: 40px auto;
+    opacity: 0; 
 }
 
 .social-icons {
@@ -672,20 +772,267 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 35px; /* Spacing between icons */
+    gap: 35px;
 }
 
 .social-icons a {
     display: inline-flex;
     align-items: center;
     transition: transform 0.3s ease;
+    opacity: 0;
+    transform: scale(0);
 }
 
 .social-icons a:hover {
-    transform: scale(1.2);
+    transform: scale(1.2) !important;
 }
 
 .social-icons img {
     height: 28px;
     width: auto;
+}
+
+.site-footer-container.in-view .footer-notice {
+    animation: slide-up-fade-in 0.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation-delay: 0.1s;
+}
+
+.site-footer-container.in-view .footer-follow {
+    animation: slide-up-fade-in 0.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation-delay: 0.2s;
+}
+
+.site-footer-container.in-view .footer-divider {
+    animation: slide-up-fade-in 0.8s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation-delay: 0.3s;
+}
+
+.site-footer-container.in-view .social-icons a {
+    animation: elastic-pop 0.6s forwards ease-out;
+}
+
+/* 
+==============================================
+MOBILE MENU AND RESPONSIVE STYLES
+============================================== 
+*/
+
+.mobile-menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1010;
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.hamburger-icon {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger-icon::before {
+    transform: translateY(-8px);
+}
+
+.hamburger-icon::after {
+    transform: translateY(8px);
+}
+
+.mobile-menu-toggle[aria-expanded="true"] .hamburger-icon {
+    background-color: transparent;
+}
+
+.mobile-menu-toggle[aria-expanded="true"] .hamburger-icon::before {
+    transform: translateY(0) rotate(45deg);
+}
+
+.mobile-menu-toggle[aria-expanded="true"] .hamburger-icon::after {
+    transform: translateY(0) rotate(-45deg);
+}
+
+
+@media (max-width: 992px) {
+    .header-container {
+        gap: 20px;
+    }
+    
+    .main-nav li {
+        margin-left: 15px;
+    }
+
+    .hero-text h1 {
+        font-size: 6rem;
+    }
+
+    .hero-text p {
+        font-size: 2rem;
+    }
+
+    .hero-logo {
+        height: 200px;
+    }
+    
+    .featured-categories,
+    .featured-products {
+        width: 90%;
+        padding: 30px 15px;
+    }
+
+    .product-item {
+        flex-basis: calc(50% - 15px);
+        gap: 40px 15px;
+    }
+
+    .product-divider {
+        display: none;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .header-container {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .search-wrapper {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: #1f2c47;
+        padding: 20px 0;
+        border-top: 1px solid rgba(58, 74, 96, 0.7);
+    }
+
+    .main-nav.is-open {
+        display: block;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .main-nav li {
+        margin-left: 0;
+    }
+
+    .hero-section {
+        min-height: auto;
+        padding: 60px 20px;
+    }
+
+    .hero-content {
+        flex-direction: column;
+    }
+
+    .hero-divider {
+        width: 60%;
+        height: 2px;
+        transform-origin: center;
+        animation: drawIn 0.6s ease-out 0.8s forwards;
+    }
+
+    .hero-text h1 {
+        font-size: 3.5rem;
+    }
+    
+    .hero-text p {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        letter-spacing: 0;
+        line-height: 1.3;
+        word-wrap: break-word;
+    }
+    
+    .category-grid-wrapper {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .product-item {
+        flex-basis: 100%;
+    }
+
+    .product-info {
+        text-align: left;
+        padding: 10px 0 15px 0;
+    }
+
+    .get-it-button-link {
+        margin-top: 15px;
+    }
+
+    .footer-notice {
+        font-size: 1.6rem;
+        line-height: 1.4;
+    }
+
+    .footer-follow {
+        font-size: 1.3rem;
+    }
+
+    .social-icons {
+        gap: 25px;
+    }
+
+    .social-icons img {
+        height: 26px;
+    }
+}
+
+
+@media (max-width: 420px) {
+    .hero-text h1 {
+        font-size: 3.2rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem; 
+    }
+
+    .hero-text p {
+        font-size: 1.1rem;
+    }
 }
