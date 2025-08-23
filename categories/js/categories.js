@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Header placeholder element with ID "header-placeholder" not found.');
       return;
     }
-
-    fetch('/header.html')
+    // UPDATED PATH
+    fetch('/Albatross-main/header.html')
       .then(response => response.text())
       .then(data => {
         headerPlaceholder.innerHTML = data;
@@ -24,12 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!footerPlaceholder) {
       return; 
     }
-
-    fetch('/footer.html')
+    // UPDATED PATH
+    fetch('/Albatross-main/footer.html')
       .then(response => response.text())
       .then(data => {
         footerPlaceholder.innerHTML = data;
-        // The animation is now called globally, so we don't need it here.
       })
       .catch(error => console.error('Failed to fetch footer:', error));
   };
@@ -38,8 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadHeader();
   loadFooter(); 
 
-  // We now call the footer animation directly on every page.
-  // This handles both dynamically loaded and hard-coded footers.
   initFooterAnimation();
   
   const SHEET_ID = '18oQzexSZ7ix_OA6ehLg_6L6yGkV8Zy6Mqiod0h2cLnA';
@@ -207,9 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // =========================================================
-  // === THIS FUNCTION CONTAINS THE FIX ===
-  // =========================================================
   function createProductHtml(data) {
     let badgeHtml = '';
     if (data.badge) {
@@ -228,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <a href="${data.link}" class="product-link product-image-link">
           ${badgeHtml}
           <div class="product-image-placeholder">
-            <!-- THE FIX IS HERE: Changed "product.title" to "data.title" -->
             <img src="${data.imagePath}" alt="${data.title}">
           </div>
         </a>
