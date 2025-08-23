@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const categoriesContainer = document.getElementById('categories-container');
     const productsContainer = document.getElementById('products-container');
-    
-    let allProducts = [];
 
     const fetchData = (sheetName, container, createHtmlFunction, onCompleteCallback) => {
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
@@ -21,27 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.innerHTML = '';
                 const rows = jsonData.table.rows;
                 rows.forEach(row => {
-                    if (row && row.c && row.c.length >= 3) {
+                    if (row && row.c) {
                         const rowData = {
-                            id: row.c[0] ? row.c[0].v : '',
-                            name: row.c[1] ? row.c[1].v : '',
-                            imagePath: row.c[2] ? row.c[2].v : '',
-                            link: row.c[3] ? row.c[3].v : '#',
-                            title: row.c[4] ? row.c[4].v : '',
-                            description: row.c[5] ? row.c[5].v : '',
-                            badge: row.c[6] ? row.c[6].v : null 
+                            name:        row.c[1]?.v || '',
+                            title:       row.c[1]?.v || '',
+                            description: row.c[2]?.v || '',
+                            imagePath:   sheetName === 'Categories' ? row.c[2]?.v : row.c[3]?.v,
+                            link:        sheetName === 'Categories' ? row.c[3]?.v : row.c[4]?.v,
+                            badge:       sheetName === 'Categories' ? null : row.c[5]?.v
                         };
-                        
-                        if (sheetName === PRODUCTS_SHEET_NAME && rowData.title) {
-                            allProducts.push({
-                                title: rowData.title,
-                                link: rowData.link,
-                                imagePath: rowData.imagePath,
-                                description: rowData.description,
-                                badge: rowData.badge
-                            });
-                        }
-
                         container.innerHTML += createHtmlFunction(rowData);
                     }
                 });
@@ -68,11 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     const createProductHtml = (data) => {
-        const divider = (data.id > 1 && (data.id - 1) % 3 === 0) ? '<hr class="product-divider">' : '';
-        const badgeHtml = data.badge ? `<div class="product-badge">${data.badge}</div>` : '';
+        let badgeHtml = '';
+        if (data.badge) {
+            let badgeClass = 'product-badge';
+             if (data.badge.includes('%') || data.badge.toLowerCase() === 'sale') {
+                badgeClass += ' badge-discount';
+            }
+            if (data.badge.toLowerCase() === 'sold out') {
+                badgeClass += ' badge-sold-out';
+            }
+            badgeHtml = `<div class="${badgeClass}">${data.badge}</div>`;
+        }
 
         return `
-            ${divider}
             <div class="product-item">
                 <a href="${data.link}" class="product-link product-image-link">
                     ${badgeHtml} 
@@ -80,14 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <img src="${data.imagePath}" alt="${data.title}">
                     </div>
                 </a>
-                
                 <a href="${data.link}" class="product-link">
                     <div class="product-info">
                         <h3 class="product-title">${data.title}</h3>
                         <p class="product-description">${data.description}</p>
                     </div>
                 </a>
-
                 <a href="${data.link}" class="get-it-button-link">
                     <button class="get-it-button">Get it</button>
                 </a>
@@ -95,80 +87,121 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     };
 
+    // =========================================================
+    // === FINAL HOMEPAGE SEARCH CODE WITH LAYOUT FIX ===
+    // =========================================================
     const initSearchSuggestions = () => {
         const searchInput = document.querySelector('.product-search-input');
         const suggestionsWrapper = document.getElementById('suggestions-wrapper');
+        const SHEET_ID = '18oQzexSZ7ix_OA6ehLg_6L6yGkV8Zy6Mqiod0h2cLnA';
 
-        if (!searchInput || !suggestionsWrapper) return;
+        if (!searchInput || !suggestionsWrapper) {
+            console.error('Search input or suggestions wrapper element not found.');
+            return;
+        }
 
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            filterProductsOnPage(searchTerm);
+        const CATEGORIES_TO_SEARCH = [
+            'electronics',
+            'fashion',
+            'home-and-garden',
+            'health-and-beauty',
+            'games',
+            'pet-supplies'
+        ];
 
-            if (searchTerm.length === 0) {
+        let allProducts = [];
+        let dataFetched = false;
+
+        const fetchAllProducts = () => {
+            if (dataFetched) return Promise.resolve();
+
+            const promises = CATEGORIES_TO_SEARCH.map(category => {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(category)}`;
+                return fetch(url)
+                    .then(res => res.text())
+                    .then(text => {
+                        const jsonData = JSON.parse(text.substring(47).slice(0, -2));
+                        if (jsonData.status === 'error') return [];
+                        return jsonData.table.rows.map(row => {
+                            if (row && row.c && row.c.length >= 5 && row.c[1]?.v) {
+                                return {
+                                    title:       row.c[1].v,
+                                    description: row.c[2]?.v || '',
+                                    imagePath:   row.c[3]?.v || '',
+                                    link:        row.c[4]?.v || '#',
+                                    badge:       row.c[5]?.v || null
+                                };
+                            }
+                            return null;
+                        }).filter(Boolean);
+                    });
+            });
+
+            return Promise.all(promises)
+                .then(results => {
+                    allProducts = results.flat();
+                    dataFetched = true;
+                })
+                .catch(error => console.error('Failed to fetch all products for search:', error));
+        };
+
+        const displaySuggestions = (query) => {
+            if (!query) {
+                suggestionsWrapper.innerHTML = '';
                 suggestionsWrapper.style.display = 'none';
                 return;
             }
-            
-            const matchedProducts = allProducts.filter(product => 
-                product.title.toLowerCase().includes(searchTerm)
+
+            const filtered = allProducts.filter(product =>
+                product.title.toLowerCase().includes(query.toLowerCase())
             );
 
-            if (matchedProducts.length > 0) {
-                suggestionsWrapper.innerHTML = matchedProducts.map(product => {
-                    const badgeHtml = product.badge ? `<div class="suggestion-badge">${product.badge}</div>` : '';
+            if (filtered.length > 0) {
+                const html = filtered.map(product => {
+                    // *** THIS IS THE FIX ***
+                    // This HTML structure ensures the title and badge are on the same line.
+                    const badgeHtml = product.badge ? `<span class="suggestion-badge">${product.badge}</span>` : '';
+                    
                     return `
-                        <div class="suggestion-item" data-link="${product.link}">
+                        <a href="${product.link}" class="suggestion-item">
                             <img src="${product.imagePath}" alt="${product.title}" class="suggestion-image">
-                            <div class="suggestion-details">
-                                <div class="suggestion-title">
-                                    ${product.title}
+                            <div class="suggestion-info">
+                                <div class="suggestion-title-line">
+                                    <span class="suggestion-title">${product.title}</span>
                                     ${badgeHtml}
                                 </div>
                                 <p class="suggestion-description">${product.description}</p>
                             </div>
-                        </div>
+                        </a>
                     `;
                 }).join('');
+                suggestionsWrapper.innerHTML = html;
                 suggestionsWrapper.style.display = 'block';
             } else {
-                suggestionsWrapper.style.display = 'none';
+                suggestionsWrapper.innerHTML = `<div class="suggestion-item no-results">No products found</div>`;
+                suggestionsWrapper.style.display = 'block';
+            }
+        };
+
+        searchInput.addEventListener('focus', fetchAllProducts, { once: true });
+
+        searchInput.addEventListener('input', (e) => {
+            if (dataFetched) {
+                displaySuggestions(e.target.value);
+            } else {
+                fetchAllProducts().then(() => displaySuggestions(e.target.value));
             }
         });
 
-        suggestionsWrapper.addEventListener('click', (event) => {
-            const suggestionItem = event.target.closest('.suggestion-item');
-            if (suggestionItem) {
-                const link = suggestionItem.dataset.link;
-                if (link) {
-                    window.location.href = link;
-                }
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.search-wrapper')) {
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
                 suggestionsWrapper.style.display = 'none';
             }
         });
     };
 
-    const filterProductsOnPage = (searchTerm) => {
-        const productItems = document.querySelectorAll('#products-container .product-item');
-        productItems.forEach(item => {
-            const titleElement = item.querySelector('.product-title');
-            if (titleElement) {
-                const title = titleElement.textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            }
-        });
-    };
-    
-    // CORRECTED: This animation will now play EVERY TIME you scroll to it.
+    // --- All Animation functions below are unchanged ---
+
     const initCategoryAnimation = () => {
         const categories = document.querySelectorAll('.category-column');
         if (!categories.length) return;
@@ -180,14 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('in-view');
                 } else {
-                    entry.target.classList.remove('in-view'); // This makes it replay
+                    entry.target.classList.remove('in-view');
                 }
             });
         }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
         categories.forEach(cat => observer.observe(cat));
     };
 
-    // CORRECTED: This animation will now play EVERY TIME you scroll to it.
     const initProductAnimation = () => {
         const products = document.querySelectorAll('.product-item');
         if (!products.length) return;
@@ -199,14 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('in-view');
                 } else {
-                    entry.target.classList.remove('in-view'); // This makes it replay
+                    entry.target.classList.remove('in-view');
                 }
             });
         }, { rootMargin: '0px 0px -20% 0px', threshold: 0 });
         products.forEach(prod => observer.observe(prod));
     };
-    
-    // This animation will correctly play only ONCE.
+
     const initTitleAnimation = () => {
         const titles = document.querySelectorAll('.section-title');
         if (!titles.length) return;
@@ -231,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         titles.forEach(title => observer.observe(title));
     };
 
-    // This animation will correctly play only ONCE.
     const initHeaderAnimation = () => {
         const header = document.querySelector('.site-header');
         if (!header) return;
@@ -259,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // This footer animation will correctly play every time.
     const initFooterAnimation = () => {
         const footer = document.querySelector('.site-footer-container');
         if (!footer) return;
@@ -282,15 +311,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Initialize all functions ---
-    if (categoriesContainer) fetchData(CATEGORIES_SHEET_NAME, categoriesContainer, createCategoryHtml, initCategoryAnimation);
+    if (categoriesContainer) {
+      fetchData(CATEGORIES_SHEET_NAME, categoriesContainer, createCategoryHtml, initCategoryAnimation);
+    }
     
-    if (productsContainer) fetchData(PRODUCTS_SHEET_NAME, productsContainer, createProductHtml, () => {
-        initProductAnimation();
-        initSearchSuggestions();
-    });
+    if (productsContainer) {
+      fetchData(PRODUCTS_SHEET_NAME, productsContainer, createProductHtml, initProductAnimation);
+    }
     
     initTitleAnimation();
     initHeaderAnimation();
     initMobileMenu();
     initFooterAnimation();
+    // Initialize the homepage-specific search functionality
+    initSearchSuggestions();
 });
