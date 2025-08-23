@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     // =========================================================
-    // === THIS IS THE FINAL, CORRECTED PATH FOR GITHUB PAGES ===
+    // === THIS IS THE FINAL, CORRECTED RELATIVE PATH ===
+    // This will work from any page inside /categories/html/
     // =========================================================
-    fetch('/Albatross-main/header.html')
+    fetch('../../header.html')
       .then(response => {
         if (!response.ok) {
             throw new Error(`Header not found at ${response.url}`);
@@ -32,9 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return; 
     }
     // =========================================================
-    // === THIS IS THE FINAL, CORRECTED PATH FOR GITHUB PAGES ===
+    // === THIS IS THE FINAL, CORRECTED RELATIVE PATH ===
     // =========================================================
-    fetch('/Albatross-main/footer.html')
+    fetch('../../footer.html')
       .then(response => {
         if (!response.ok) {
             throw new Error(`Footer not found at ${response.url}`);
