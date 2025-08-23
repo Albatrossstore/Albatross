@@ -6,9 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Header placeholder element with ID "header-placeholder" not found.');
       return;
     }
-    // UPDATED PATH
-    fetch('/Albatross-main/header.html')
-      .then(response => response.text())
+    // =========================================================
+    // === THIS IS THE CORRECTED PATH ===
+    // It finds the header relative to the JS file's location.
+    // =========================================================
+    fetch('../../header.html')
+      .then(response => {
+        if (!response.ok) {
+            // If this fails, it will now show a clear error in the console
+            // instead of injecting a 404 page.
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.text();
+      })
       .then(data => {
         headerPlaceholder.innerHTML = data;
         initHeaderAnimation();
@@ -24,9 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!footerPlaceholder) {
       return; 
     }
-    // UPDATED PATH
-    fetch('/Albatross-main/footer.html')
-      .then(response => response.text())
+    // =========================================================
+    // === THIS IS THE CORRECTED PATH ===
+    // =========================================================
+    fetch('../../footer.html')
+      .then(response => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.text();
+      })
       .then(data => {
         footerPlaceholder.innerHTML = data;
       })
