@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Albatross</title>
+
+    <link rel="icon" type="image/png" href="../../images/Lolo.png/Lolo.png">
+    
+    <!-- Shared stylesheet for all category pages -->
+    <link rel="stylesheet" href="../css/categories.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Courgette&family=Permanent+Marker&family=Roboto:wght@400;500;700&family=Oswald:wght@500&family=Lato&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Styles specifically for the Blog Page -->
+    <style>
+        .blog-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 60px auto 100px auto;
+        }
+        .blog-title {
+            font-family: "Permanent Marker", cursive;
+            font-size: 3rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .blog-section {
+            text-align: left; 
+        }
+        /* --- THIS IS THE UPDATED PART --- */
+        .blog-section h2 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-top: 50px; 
+            margin-bottom: 25px;
+            /* This re-adds the underline to the section titles */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
+            padding-bottom: 10px;
+        }
+        /* ---------------------------------- */
+        .blog-section h2:first-of-type {
+            margin-top: 0;
+        }
+        .blog-section p, 
+        .blog-section li {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #c0c8d4;
+            margin-bottom: 20px;
+        }
+        .blog-section ul, 
+        .blog-section ol {
+            padding-left: 40px; 
+        }
+        .blog-section li {
+            margin-bottom: 18px;
+        }
+        .blog-section strong {
+            color: #ffffff;
+        }
+    </style>
+</head>
+ <body>
+    <!-- The header will be loaded here by categories.js -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Blog Content Start -->
+    <main>
+        <div class="blog-container">
+            <h1 class="blog-title">Blog</h1>
+
+            <section class="blog-section">
+                <h2>Welcome to Albatross: Your Trusted Affiliate Store</h2>
+                <p>
+                    Welcome to Albatross! We’re excited to have you here at your go-to destination for discovering high-quality products curated just for you. As an affiliate store, our mission is to provide you with an exceptional online shopping experience by featuring products we love and trust.
+                </p>
+
+                <h2>Why Choose Albatross?</h2>
+                <p>
+                    At Albatross, we believe online shopping should be straightforward, enjoyable, and secure. Here’s what sets us apart:
+                </p>
+                <ol>
+                    <li><strong>Careful Selection:</strong> We are committed to offering you top-quality products from the best brands. Each item is chosen with care to meet your needs and expectations.</li>
+                    <li><strong>Complete Transparency:</strong> As an affiliate store, we earn a commission when you purchase through our links. This doesn’t affect the price you pay but helps us continue to provide high-quality service.</li>
+                    <li><strong>Optimized User Experience:</strong> Our site is designed to be easy to navigate, helping you find what you need quickly. Enjoy a user-friendly interface and a streamlined checkout process.</li>
+                </ol>
+
+                <h2>Our Product Categories</h2>
+                <p>
+                    We offer a diverse range of products to suit your needs. Explore our categories to find what’s right for you:
+                </p>
+                <ul>
+                    <li><strong>Electronics:</strong> Discover the latest in tech gadgets, smartphones, and accessories.</li>
+                    <li><strong>Fashion:</strong> Stay stylish with our curated collection of clothing, shoes, and jewelry.</li>
+                    <li><strong>Home and Garden:</strong> Find appliances, cookware, and decor to enhance your living space.</li>
+                    <li><strong>Health and Beauty:</strong> Pamper yourself with skincare, cosmetics, and wellness products.</li>
+                    <li><strong>Games:</strong> Explore toys for kids, board games, and the latest in digital entertainment.</li>
+                    <li><strong>Pet Supplies:</strong> Get all the essentials for your beloved pets, from food to toys.</li>
+                </ul>
+
+                <h2>Our Commitments</h2>
+                <p>
+                    At Albatross, we are dedicated to:
+                </p>
+                <ul>
+                    <li><strong>Providing Honest Recommendations:</strong> We recommend products that we genuinely believe are useful and of high quality.</li>
+                    <li><strong>Delivering Top-Notch Customer Service:</strong> Our team is here to answer your questions and assist with your shopping experience.</li>
+                    <li><strong>Maintaining Competitive Prices:</strong> We work hard to offer you products at fair and competitive prices.</li>
+                </ul>
+
+                <h2>Join Our Community</h2>
+                <p>
+                    Subscribe to our newsletter to receive updates on new products, special offers, and exclusive shopping tips. Follow us on social media to stay connected and be the first to know about our latest arrivals.
+                </p>
+                <p>
+                    Thank you for visiting Albatross! We look forward to helping you find exactly what you’re looking for and making your online shopping experience enjoyable and satisfying.
+                </p>
+            </section>
+        </div>
+    </main>
+    <!-- Main Blog Content End -->
+
+    <!-- Hard-coded footer, identical to electronics.html -->
+    <footer class="site-footer-container">
+        <div class="footer-content">
+            <p class="footer-notice">Heads up! You're now being redirected to the purchase site. Remember, we're just the middleman—happy shopping!</p>
+            <p class="footer-follow">please follow us</p>
+        </div>
+        <hr class="footer-divider">
+        <div class="social-icons">
+            <!-- All icon paths must go UP twice to get to the root images folder -->
+            <a href="#" aria-label="Instagram"><img src="../../images/icons/instagram.png" alt="Instagram"></a>
+            <a href="#" aria-label="TikTok"><img src="../../images/icons/tiktok.png" alt="TikTok"></a>
+            <a href="#" aria-label="YouTube"><img src="../../images/icons/youtube.png" alt="YouTube"></a>
+            <a href="#" aria-label="Facebook"><img src="../../images/icons/facebook.png" alt="Facebook"></a>
+            <a href="#" aria-label="X"><img src="../../images/icons/x.png" alt="X"></a>
+            <a href="#" aria-label="Snapchat"><img src="../../images/icons/snapchat.png" alt="Snapchat"></a>
+            <a href="#" aria-label="Pinterest"><img src="../../images/icons/pinterest.png" alt="Pinterest"></a>
+            <a href="#" aria-label="Reddit"><img src="../../images/icons/reddit.png" alt="Reddit"></a>
+            <a href="#" aria-label="Telegram"><img src="../../images/icons/telegram.png" alt="Telegram"></a>
+            <a href="#" aria-label="WhatsApp"><img src="../../images/icons/whatsapp.png" alt="WhatsApp"></a>
+        </div>
+    </footer>
+  
+    <!-- Link to the JavaScript file that handles header loading and animations -->
+    <script src="../js/categories.js"></script>
+</body>
+</html>
