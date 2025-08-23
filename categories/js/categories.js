@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     // =========================================================
-    // === THIS IS THE FINAL, CORRECTED RELATIVE PATH ===
-    // This will work from any page inside /categories/html/
+    // === THIS IS THE FINAL, CORRECT RELATIVE PATH ===
+    // This tells the script to go UP TWICE from the HTML file's location.
+    // This works for ALL pages inside /categories/html/
     // =========================================================
     fetch('../../header.html')
       .then(response => {
         if (!response.ok) {
-            throw new Error(`Header not found at ${response.url}`);
+            throw new Error(`Header not found at ${response.url}. Check the path in categories.js.`);
         }
         return response.text();
       })
@@ -33,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return; 
     }
     // =========================================================
-    // === THIS IS THE FINAL, CORRECTED RELATIVE PATH ===
+    // === THIS IS THE FINAL, CORRECT RELATIVE PATH ===
     // =========================================================
     fetch('../../footer.html')
       .then(response => {
         if (!response.ok) {
-            throw new Error(`Footer not found at ${response.url}`);
+            throw new Error(`Footer not found at ${response.url}. Check the path in categories.js.`);
         }
         return response.text();
       })
