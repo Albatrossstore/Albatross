@@ -7,15 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     // =========================================================
-    // === THIS IS THE CORRECTED PATH ===
-    // It finds the header relative to the JS file's location.
+    // === THIS IS THE FINAL, CORRECTED PATH FOR GITHUB PAGES ===
     // =========================================================
-    fetch('../../header.html')
+    fetch('/Albatross-main/header.html')
       .then(response => {
         if (!response.ok) {
-            // If this fails, it will now show a clear error in the console
-            // instead of injecting a 404 page.
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            throw new Error(`Header not found at ${response.url}`);
         }
         return response.text();
       })
@@ -35,12 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return; 
     }
     // =========================================================
-    // === THIS IS THE CORRECTED PATH ===
+    // === THIS IS THE FINAL, CORRECTED PATH FOR GITHUB PAGES ===
     // =========================================================
-    fetch('../../footer.html')
+    fetch('/Albatross-main/footer.html')
       .then(response => {
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            throw new Error(`Footer not found at ${response.url}`);
         }
         return response.text();
       })
@@ -56,6 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initFooterAnimation();
   
+  // ... The rest of the file is unchanged and correct ...
+
   const SHEET_ID = '18oQzexSZ7ix_OA6ehLg_6L6yGkV8Zy6Mqiod0h2cLnA';
 
   const getCategoryName = () => {
