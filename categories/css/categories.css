@@ -127,11 +127,10 @@ HEADER & NAVIGATION STYLES
 .header-logo { height: 35px; transition: transform 0.3s ease; }
 .header-logo:hover { transform: scale(1.1) rotate(-5deg); }
 
-/* --- Search Bar (FIXED) --- */
+/* --- Search Bar --- */
 .search-wrapper {
-    flex-grow: 1; /* This allows the element to grow and fill available space */
+    flex-grow: 1; 
     position: relative;
-    /* max-width and margin properties removed to allow flexible growth */
 }
 
 .search-container {
@@ -298,7 +297,7 @@ HEADER & NAVIGATION STYLES
 
 /*
 ==============================================
-HEADER ANIMATIONS (NEWLY ADDED)
+HEADER ANIMATIONS
 ==============================================
 */
 .header-logo,
@@ -383,7 +382,7 @@ CATEGORY PAGE: MAIN CONTENT
 .product-item {
     text-align: center;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
 }
 
 .product-link {
@@ -392,46 +391,40 @@ CATEGORY PAGE: MAIN CONTENT
     display: block;
 }
 
+.product-info {
+    padding: 15px 5px;
+    text-align: left;
+    flex-grow: 1;
+}
+
 .product-image-link {
     position: relative;
     display: block;
 }
 
-/*
-======================================================
-=== THIS IS THE UPDATED BADGE STYLE YOU ASKED FOR ===
-======================================================
-*/
 .product-badge {
     position: absolute;
-    top: 10px; /* Position from the top */
-    left: 10px; /* MOVED to the left corner */
+    top: 10px;
+    left: 10px;
     background-color: #f35245;
     color: #ffffff;
-    padding: 4px 10px; /* Adjusted padding for a cleaner look */
-    border-radius: 4px; /* Changed to a modern, less-rounded shape */
-    font-size: 0.8rem; /* Slightly smaller font */
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
     font-weight: 700;
     z-index: 5;
-    border: none; /* REMOVED the white border */
-    transform: none; /* REMOVED the tilt */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* ADDED a subtle shadow */
-    transition: transform 0.3s ease; /* Simplified transition */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
 .product-image-link:hover .product-badge {
-    transform: scale(1.1); /* ADDED a simple hover effect */
+    transform: scale(1.1);
 }
 
 .get-it-button-link {
     text-decoration: none;
     display: block;
-    margin-top: auto; /* Pushes button to the bottom */
-}
-
-.product-info {
-    padding: 15px 5px;
-    text-align: left;
+    margin-top: auto;
 }
 
 .product-title {
@@ -492,7 +485,7 @@ CATEGORY PAGE: MAIN CONTENT
 
 /*
 ==============================================
-FOOTER STYLES (WITH ANIMATIONS)
+FOOTER STYLES
 ==============================================
 */
 .site-footer-container {
@@ -528,10 +521,10 @@ FOOTER STYLES (WITH ANIMATIONS)
 .footer-divider {
     border: none;
     height: 1px;
-    background: repeating-linear-gradient(to right,
-        transparent,
-        rgba(255, 255, 255, 0.2) 10px,
-        rgba(255, 255, 255, 0.2) 20px,
+    background: repeating-linear-gradient(to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.2) 10px, 
+        rgba(255, 255, 255, 0.2) 20px, 
         transparent 30px);
     background-size: 40px 1px;
     margin: 40px auto;
@@ -736,9 +729,11 @@ MOBILE MENU AND RESPONSIVE STYLES
         text-align: left;
         padding: 0;
     }
-
+    
+    /* === THIS IS THE FIX === */
     .get-it-button-link {
-        margin-top: 0;
+        /* This rule pushes the button to the bottom of the flex container */
+        margin-top: auto; 
     }
 
     .footer-notice {
