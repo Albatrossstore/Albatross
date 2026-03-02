@@ -8,20 +8,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Courgette&family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Courgette&family=Lato:wght@400;700&family=Permanent+Marker&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4QLRJWWEGZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4QLRJWWEGZ');
-</script>
-
-    
 </head>
 <body>
 <!-- CORRECTED header.html -->
@@ -29,7 +18,7 @@
     <div class="header-container">
         <div class="logo-wrapper">
             <!-- PATH FIXED: Starts with '/' to work from any page -->
-            <img src="images/Lolo.png/Lolo.png" alt="Albatross Small Logo" class="header-logo">
+            <img src="/images/Lolo.png/Lolo.png" alt="Albatross Small Logo" class="header-logo">
         </div>
 
         <h1 class="mobile-header-title">Albatross</h1>
@@ -54,30 +43,47 @@
         <nav id="main-nav-menu" class="main-nav">
             <ul>
                 <!-- PATHS FIXED: All links should start with '/' -->
-                <li><a href="index.html">Home</a></li>
-                <li><a href="categories/html/Electronics.html">Electronics</a></li>
-                <li><a href="categories/html/Fashion.html">Fashion</a></li>
-                <li><a href="categories/html/Home-and-Garden.html">Home and Garden</a></li>
-                <li><a href="categories/html/Health-and-Beauty.html">Health and Beauty</a></li>
-                <li><a href="categories/html/Games.html">Games</a></li>
-                <li><a href="categories/html/Pet-Supplies.html">Pet Supplies</a></li>
-                <li><a href="categories/html/blog.html">Blog</a></li>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/categories/html/Electronics.html">Electronics</a></li>
+                <li><a href="/categories/html/Fashion.html">Fashion</a></li>
+                <li><a href="/categories/html/Home-and-Garden.html">Home and Garden</a></li>
+                <li><a href="/categories/html/Health-and-Beauty.html">Health and Beauty</a></li>
+                <li><a href="/categories/html/Games.html">Games</a></li>
+                <li><a href="/categories/html/Pet-Supplies.html">Pet Supplies</a></li>
+                <li><a href="/categories/html/blog.html">Blog</a></li>
             </ul>
         </nav>
     </div>
 </header>
 
-    <main class="hero-section">
-        <div class="hero-content">
-            <img src="images/Lolo.png/Lolo.png" alt="Albatross Main Logo" class="hero-logo">
-            <div class="hero-divider"></div>
-            <div class="hero-text">
-                <h1>
-                    <span style="--i:1">A</span><span style="--i:2">L</span><span style="--i:3">B</span><span style="--i:4">A</span><span style="--i:5">T</span><span style="--i:6">R</span><span style="--i:7">O</span><span style="--i:8">S</span><span style="--i:9">S</span>
-                </h1>
-                <p>elevate your shopping experience with albatross</p>
+    <main class="hero-carousel-section">
+        <div class="hero-carousel-header">
+            <div class="hero-header-left">
+                <p class="hero-header-label">Hot Products</p>
+                <h1 class="hero-header-title">Popular Deals This Week</h1>
+            </div>
+            <div class="hero-header-right">
+                <span class="hero-header-live-dot"></span>
+                <span class="hero-header-live-text">Popular now</span>
             </div>
         </div>
+
+        <div class="hero-carousel-shell">
+            <button class="hero-carousel-nav prev" id="carousel-prev" aria-label="Previous products">
+                <span class="hero-carousel-nav-icon" aria-hidden="true">➺</span>
+            </button>
+            <div class="hero-carousel-viewport">
+                <div id="hero-carousel-track" class="hero-carousel-track">
+                    <div class="loader-container">
+                        <span class="loader"></span>
+                    </div>
+                </div>
+            </div>
+            <button class="hero-carousel-nav next" id="carousel-next" aria-label="Next products">
+                <span class="hero-carousel-nav-icon" aria-hidden="true">➺</span>
+            </button>
+        </div>
+        <div id="carousel-dots" class="hero-carousel-dots" aria-label="Carousel pages"></div>
     </main>
 
     <section class="featured-categories">
@@ -110,24 +116,13 @@
         </div>
         <hr class="footer-divider">
         <div class="social-icons">
-            <a href="#" aria-label="Instagram"><img src="images/icons/instagram.png" alt="Instagram"></a>
-            <a href="#" aria-label="TikTok"><img src="images/icons/tiktok.png" alt="TikTok"></a>
-            <a href="#" aria-label="YouTube"><img src="images/icons/youtube.png" alt="YouTube"></a>
-            <a href="#" aria-label="Facebook"><img src="images/icons/facebook.png" alt="Facebook"></a>
-            <a href="#" aria-label="X"><img src="images/icons/x.png" alt="X"></a>
-            <a href="#" aria-label="Snapchat"><img src="images/icons/snapchat.png" alt="Snapchat"></a>
-            <a href="#" aria-label="Pinterest"><img src="images/icons/pinterest.png" alt="Pinterest"></a>
-            <a href="#" aria-label="Reddit"><img src="images/icons/reddit.png" alt="Reddit"></a>
-            <a href="#" aria-label="Telegram"><img src="images/icons/telegram.png" alt="Telegram"></a>
-            <a href="#" aria-label="WhatsApp"><img src="images/icons/whatsapp.png" alt="WhatsApp"></a>
+            <a href="https://www.instagram.com/albatross.storee/" aria-label="Instagram"><img src="images/icons/instagram.png" alt="Instagram"></a>
+            <a href="https://www.tiktok.com/@albatrossstoree" aria-label="TikTok"><img src="images/icons/tiktok.png" alt="TikTok"></a>
+            <a href="https://www.youtube.com/@Albatrossstore" aria-label="YouTube"><img src="images/icons/youtube.png" alt="YouTube"></a>
+            <a href="https://www.facebook.com/profile.php?id=61585365004816" aria-label="Facebook"><img src="images/icons/facebook.png" alt="Facebook"></a>
+            <a href="https://x.com/Albatrossstore" aria-label="X"><img src="images/icons/x.png" alt="X"></a>
         </div>
     </footer>
 
 </body>
 </html>
-
-
-
-
-
-
