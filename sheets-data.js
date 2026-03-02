@@ -13,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselDots = document.getElementById('carousel-dots');
     const carouselViewport = document.querySelector('.hero-carousel-viewport');
 
+    const normalizeLink = (url = '') => {
+        if (!url) return '#';
+        if (/^(https?:|mailto:|tel:|#)/i.test(url)) return url;
+        if (url.startsWith('//')) return url;
+        return url.replace(/^\/+/, '');
+    };
+
     const fetchData = (sheetName, container, createHtmlFunction, onCompleteCallback) => {
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
 
@@ -51,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const createCategoryHtml = (data) => `
         <div class="category-column">
-            <a href="${data.link}" class="category-link">
+            <a href="${normalizeLink(data.link)}" class="category-link">
                 <div class="category-image-placeholder">
                     <img src="${data.imagePath}" alt="${data.name}">
                 </div>
@@ -75,19 +82,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `
             <div class="product-item">
-                <a href="${data.link}" class="product-link product-image-link">
+                <a href="${normalizeLink(data.link)}" class="product-link product-image-link">
                     ${badgeHtml} 
                     <div class="product-image-placeholder">
                         <img src="${data.imagePath}" alt="${data.title}">
                     </div>
                 </a>
-                <a href="${data.link}" class="product-link">
+                <a href="${normalizeLink(data.link)}" class="product-link">
                     <div class="product-info">
                         <h3 class="product-title">${data.title}</h3>
                         <p class="product-description">${data.description}</p>
                     </div>
                 </a>
-                <a href="${data.link}" class="get-it-button-link">
+                <a href="${normalizeLink(data.link)}" class="get-it-button-link">
                     <button class="get-it-button">Get it</button>
                 </a>
             </div>
@@ -111,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `
         <div class="hero-slide">
-            <a href="${data.link}" class="hero-slide-link">
+            <a href="${normalizeLink(data.link)}" class="hero-slide-link">
                 <article class="hero-slide-card">
                     <div class="hero-slide-image-wrap">
                         <img src="${data.imagePath}" alt="${data.title}" class="hero-slide-image">
