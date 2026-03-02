@@ -499,13 +499,9 @@ body {
     overflow: hidden;
     height: 100%;
     opacity: 0;
-    animation: slide-up-fade-in 0.6s ease-out forwards;
+    animation: slide-up-fade-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
 }
-
-.hero-slide:nth-child(2) .hero-slide-card { animation-delay: 0.08s; }
-.hero-slide:nth-child(3) .hero-slide-card { animation-delay: 0.16s; }
-.hero-slide:nth-child(4) .hero-slide-card { animation-delay: 0.24s; }
 
 .hero-slide-card:hover {
     transform: translateY(-6px);
@@ -942,25 +938,25 @@ body {
 /* --- Animated Category Columns --- */
 .category-column {
     opacity: 0;
-    transform: translateX(-100px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(38px);
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
 }
 
 .category-column.in-view {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 /* --- Animated Product Items --- */
 .product-item {
     opacity: 0;
-    transform: translateX(-100px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(38px);
+    transition: opacity 0.65s ease-out, transform 0.65s ease-out;
 }
 
 .product-item.in-view {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 /* --- Header Animations --- */
