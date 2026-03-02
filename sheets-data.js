@@ -2,9 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const SHEET_ID = '18oQzexSZ7ix_OA6ehLg_6L6yGkV8Zy6Mqiod0h2cLnA';
     const CATEGORIES_SHEET_NAME = 'Categories';
     const PRODUCTS_SHEET_NAME = 'Products';
+    const CAROUSEL_SHEET_NAME = 'carousel';
+    const HEADER_PRODUCTS_LIMIT = 6;
 
     const categoriesContainer = document.getElementById('categories-container');
     const productsContainer = document.getElementById('products-container');
+    const carouselTrack = document.getElementById('hero-carousel-track');
+    const carouselPrevButton = document.getElementById('carousel-prev');
+    const carouselNextButton = document.getElementById('carousel-next');
+    const carouselDots = document.getElementById('carousel-dots');
+    const carouselViewport = document.querySelector('.hero-carousel-viewport');
 
     const fetchData = (sheetName, container, createHtmlFunction, onCompleteCallback) => {
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
@@ -85,6 +92,278 @@ document.addEventListener('DOMContentLoaded', () => {
                 </a>
             </div>
         `;
+    };
+
+    const getBadgeClass = (badgeText = '') => {
+        const normalized = badgeText.toLowerCase().trim();
+
+        if (normalized.includes('%') || normalized.includes('off')) return 'badge-discount';
+        if (normalized.includes('sold out')) return 'badge-soldout';
+        if (normalized.includes('trend')) return 'badge-trending';
+
+        return '';
+    };
+
+    const createCarouselHtml = (data) => {
+        const descriptionText = data.description && data.description.trim()
+            ? data.description
+            : 'Compare features and check the latest price now.';
+
+        return `
+        <div class="hero-slide">
+            <a href="${data.link}" class="hero-slide-link">
+                <article class="hero-slide-card">
+                    <div class="hero-slide-image-wrap">
+                        <img src="${data.imagePath}" alt="${data.title}" class="hero-slide-image">
+                        ${data.badge ? `<span class="hero-slide-badge ${getBadgeClass(data.badge)}">${data.badge}</span>` : ''}
+                    </div>
+                    <div class="hero-slide-content">
+                        <h3 class="hero-slide-title">${data.title}</h3>
+                        <p class="hero-slide-description">${descriptionText}</p>
+                        <span class="hero-slide-cta">Shop now</span>
+                    </div>
+                </article>
+            </a>
+        </div>
+    `;
+    };
+
+    const initHeroCarousel = () => {
+        if (!carouselTrack || !carouselPrevButton || !carouselNextButton) return;
+
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(CAROUSEL_SHEET_NAME)}`;
+
+        let slidesData = [];
+        let totalSlides = 0;
+        let itemsPerView = 3;
+        let cloneCount = 0;
+        let currentIndex = 0;
+        let autoSlideTimer = null;
+        let isTransitioning = false;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const getItemsPerView = () => {
+            if (window.innerWidth <= 768) return 1;
+            if (window.innerWidth <= 992) return 2;
+            return 3;
+        };
+
+        const setTrackTransition = (enabled) => {
+            carouselTrack.style.transition = enabled ? 'transform 0.45s ease-in-out' : 'none';
+        };
+
+        const getRealIndex = () => {
+            if (!totalSlides) return 0;
+            return ((currentIndex - cloneCount) % totalSlides + totalSlides) % totalSlides;
+        };
+
+        const updateDots = () => {
+            if (!carouselDots) return;
+
+            const dots = carouselDots.querySelectorAll('.hero-carousel-dot');
+            const activeIndex = getRealIndex();
+            const maxVisibleDots = 6;
+            let startIndex = 0;
+
+            if (dots.length > maxVisibleDots) {
+                startIndex = Math.max(0, activeIndex - Math.floor(maxVisibleDots / 2));
+                startIndex = Math.min(startIndex, dots.length - maxVisibleDots);
+            }
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+                const isVisible = dots.length <= maxVisibleDots || (index >= startIndex && index < startIndex + maxVisibleDots);
+                dot.classList.toggle('is-hidden', !isVisible);
+            });
+        };
+
+        const buildDots = () => {
+            if (!carouselDots) return;
+
+            carouselDots.innerHTML = '';
+            if (totalSlides <= 1) return;
+
+            for (let i = 0; i < totalSlides; i += 1) {
+                const dot = document.createElement('button');
+                dot.className = 'hero-carousel-dot';
+                dot.type = 'button';
+                dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                dot.addEventListener('click', () => {
+                    currentIndex = cloneCount + i;
+                    setTrackTransition(true);
+                    updateTrackPosition();
+                });
+                carouselDots.appendChild(dot);
+            }
+        };
+
+        const updateNavState = () => {
+            const shouldDisable = totalSlides <= itemsPerView;
+            carouselPrevButton.disabled = shouldDisable;
+            carouselNextButton.disabled = shouldDisable;
+        };
+
+        const updateTrackPosition = () => {
+            const firstSlide = carouselTrack.querySelector('.hero-slide');
+            if (!firstSlide) return;
+
+            const slideWidth = firstSlide.getBoundingClientRect().width;
+            carouselTrack.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            updateDots();
+        };
+
+        const rebuildTrack = (keepRealIndex = 0) => {
+            itemsPerView = getItemsPerView();
+            cloneCount = Math.min(itemsPerView, totalSlides);
+
+            const prependClones = slidesData.slice(-cloneCount);
+            const appendClones = slidesData.slice(0, cloneCount);
+            const extendedSlides = [...prependClones, ...slidesData, ...appendClones];
+
+            carouselTrack.innerHTML = extendedSlides.map(createCarouselHtml).join('');
+            currentIndex = cloneCount + (keepRealIndex % totalSlides);
+            setTrackTransition(false);
+            updateTrackPosition();
+            requestAnimationFrame(() => setTrackTransition(true));
+        };
+
+        const moveCarousel = (direction = 'next') => {
+            if (isTransitioning || totalSlides <= itemsPerView) return;
+
+            const step = itemsPerView;
+            isTransitioning = true;
+            setTrackTransition(true);
+            if (direction === 'next') {
+                currentIndex += step;
+            } else {
+                currentIndex -= step;
+            }
+
+            updateTrackPosition();
+        };
+
+        const stopAutoSlide = () => {
+            if (autoSlideTimer) {
+                clearInterval(autoSlideTimer);
+                autoSlideTimer = null;
+            }
+        };
+
+        const startAutoSlide = () => {
+            stopAutoSlide();
+            if (totalSlides <= itemsPerView) return;
+            autoSlideTimer = setInterval(() => moveCarousel('next'), 4000);
+        };
+
+        carouselTrack.addEventListener('transitionend', (event) => {
+            if (event.propertyName !== 'transform') return;
+            if (!totalSlides) return;
+
+            if (currentIndex >= totalSlides + cloneCount) {
+                const normalized = ((currentIndex - cloneCount) % totalSlides + totalSlides) % totalSlides;
+                currentIndex = cloneCount + normalized;
+                setTrackTransition(false);
+                updateTrackPosition();
+                carouselTrack.offsetHeight;
+                setTrackTransition(true);
+            } else if (currentIndex < cloneCount) {
+                const normalized = ((currentIndex - cloneCount) % totalSlides + totalSlides) % totalSlides;
+                currentIndex = cloneCount + normalized;
+                setTrackTransition(false);
+                updateTrackPosition();
+                carouselTrack.offsetHeight;
+                setTrackTransition(true);
+            }
+
+            isTransitioning = false;
+        });
+
+        fetch(url)
+            .then(response => response.text())
+            .then(text => {
+                const jsonData = JSON.parse(text.substring(47).slice(0, -2));
+                if (jsonData.status === 'error') {
+                    throw new Error(jsonData.errors[0].detailed_message);
+                }
+
+                const rows = jsonData.table.rows || [];
+                const parsedSlides = rows
+                    .map(row => ({
+                        title: row?.c?.[1]?.v || '',
+                        description: row?.c?.[2]?.v || '',
+                        imagePath: row?.c?.[3]?.v || '',
+                        link: row?.c?.[4]?.v || '#',
+                        badge: row?.c?.[5]?.v || ''
+                    }))
+                    .filter(item => item.title && item.imagePath);
+
+                slidesData = parsedSlides.slice(0, HEADER_PRODUCTS_LIMIT);
+                totalSlides = slidesData.length;
+
+                if (!totalSlides) {
+                    carouselTrack.innerHTML = '<p style="color: #e0e4e8; width: 100%; text-align: center;">No carousel products found.</p>';
+                    return;
+                }
+
+                rebuildTrack(0);
+                buildDots();
+                updateNavState();
+                updateTrackPosition();
+
+                carouselPrevButton.addEventListener('click', () => moveCarousel('prev'));
+                carouselNextButton.addEventListener('click', () => moveCarousel('next'));
+
+                const carouselShell = carouselTrack.closest('.hero-carousel-shell');
+                if (carouselShell) {
+                    carouselShell.addEventListener('mouseenter', stopAutoSlide);
+                    carouselShell.addEventListener('mouseleave', startAutoSlide);
+                }
+
+                if (carouselViewport) {
+                    carouselViewport.addEventListener('touchstart', (event) => {
+                        if (!event.touches.length) return;
+                        touchStartX = event.touches[0].clientX;
+                        touchEndX = touchStartX;
+                        stopAutoSlide();
+                    }, { passive: true });
+
+                    carouselViewport.addEventListener('touchmove', (event) => {
+                        if (!event.touches.length) return;
+                        touchEndX = event.touches[0].clientX;
+                    }, { passive: true });
+
+                    carouselViewport.addEventListener('touchend', () => {
+                        const swipeDistance = touchEndX - touchStartX;
+                        const swipeThreshold = 32;
+
+                        if (Math.abs(swipeDistance) >= swipeThreshold) {
+                            if (swipeDistance < 0) {
+                                moveCarousel('next');
+                            } else {
+                                moveCarousel('prev');
+                            }
+                        }
+
+                        startAutoSlide();
+                    });
+                }
+
+                window.addEventListener('resize', () => {
+                    const realIndex = getRealIndex();
+                    rebuildTrack(realIndex);
+                    buildDots();
+                    updateNavState();
+                    updateTrackPosition();
+                    startAutoSlide();
+                });
+
+                startAutoSlide();
+            })
+            .catch(error => {
+                console.error('Error loading carousel data:', error);
+                carouselTrack.innerHTML = `<p style="color: #ff8a5c; width: 100%; text-align: center;">Error: Could not load carousel products.</p>`;
+            });
     };
 
     // =========================================================
@@ -318,6 +597,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (productsContainer) {
       fetchData(PRODUCTS_SHEET_NAME, productsContainer, createProductHtml, initProductAnimation);
     }
+
+    initHeroCarousel();
     
     initTitleAnimation();
     initHeaderAnimation();
