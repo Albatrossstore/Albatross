@@ -1,4 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const getBasePath = () => {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    if (window.location.hostname.endsWith('github.io') && pathParts.length > 0) {
+      return `/${pathParts[0]}`;
+    }
+    return '';
+  };
+
+  const BASE_PATH = getBasePath();
+
+  const toBasePathUrl = (value = '') => {
+    if (!value) return value;
+    if (/^(https?:|mailto:|tel:|#|javascript:)/i.test(value)) return value;
+    if (value.startsWith('//')) return value;
+    const clean = value.replace(/^\/+/, '');
+    return `${BASE_PATH}/${clean}`;
+  };
+
+  const normalizeInjectedHeaderPaths = (rootElement) => {
+    if (!rootElement) return;
+
+    rootElement.querySelectorAll('a[href]').forEach((anchor) => {
+      const href = anchor.getAttribute('href');
+      anchor.setAttribute('href', toBasePathUrl(href));
+    });
+
+    rootElement.querySelectorAll('img[src]').forEach((img) => {
+      const src = img.getAttribute('src');
+      img.setAttribute('src', toBasePathUrl(src));
+    });
+  };
+
   // === HEADER LOADING FUNCTION ===
   const loadHeader = () => {
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -6,20 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Header placeholder element with ID "header-placeholder" not found.');
       return;
     }
-    // =========================================================
-    // === THIS IS THE FINAL, CORRECT RELATIVE PATH ===
-    // This tells the script to go UP TWICE from the HTML file's location.
-    // This works for ALL pages inside /categories/html/
-    // =========================================================
-    fetch('../../header.html')
-      .then(response => {
-        if (!response.ok) {
-            throw new Error(`Header not found at ${response.url}. Check the path in categories.js.`);
-        }
-        return response.text();
-      })
+
+    fetch(`${BASE_PATH}/header.html`)
+      .then(response => response.text())
       .then(data => {
         headerPlaceholder.innerHTML = data;
+        normalizeInjectedHeaderPaths(headerPlaceholder);
         initHeaderAnimation();
         initMobileMenu();
         initSearchSuggestions();
@@ -33,18 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!footerPlaceholder) {
       return; 
     }
-    // =========================================================
-    // === THIS IS THE FINAL, CORRECT RELATIVE PATH ===
-    // =========================================================
-    fetch('../../footer.html')
-      .then(response => {
-        if (!response.ok) {
-            throw new Error(`Footer not found at ${response.url}. Check the path in categories.js.`);
-        }
-        return response.text();
-      })
+
+    fetch(`${BASE_PATH}/footer.html`)
+      .then(response => response.text())
       .then(data => {
         footerPlaceholder.innerHTML = data;
+        // The animation is now called globally, so we don't need it here.
       })
       .catch(error => console.error('Failed to fetch footer:', error));
   };
@@ -53,10 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
   loadHeader();
   loadFooter(); 
 
+  // We now call the footer animation directly on every page.
+  // This handles both dynamically loaded and hard-coded footers.
   initFooterAnimation();
   
-  // ... The rest of the file is unchanged and correct ...
-
   const SHEET_ID = '18oQzexSZ7ix_OA6ehLg_6L6yGkV8Zy6Mqiod0h2cLnA';
 
   const getCategoryName = () => {
@@ -222,6 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // =========================================================
+  // === THIS FUNCTION CONTAINS THE FIX ===
+  // =========================================================
   function createProductHtml(data) {
     let badgeHtml = '';
     if (data.badge) {
@@ -240,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <a href="${data.link}" class="product-link product-image-link">
           ${badgeHtml}
           <div class="product-image-placeholder">
+            <!-- THE FIX IS HERE: Changed "product.title" to "data.title" -->
             <img src="${data.imagePath}" alt="${data.title}">
           </div>
         </a>
