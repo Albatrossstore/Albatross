@@ -491,9 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const initCategoryAnimation = () => {
         const categories = document.querySelectorAll('.category-column');
         if (!categories.length) return;
-        categories.forEach((cat, index) => {
-            cat.style.transitionDelay = `${index * 150}ms`;
-        });
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -509,9 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const initProductAnimation = () => {
         const products = document.querySelectorAll('.product-item');
         if (!products.length) return;
-        products.forEach((prod, index) => {
-            prod.style.transitionDelay = `${(index % 3) * 150}ms`;
-        });
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
